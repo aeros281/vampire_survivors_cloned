@@ -16,6 +16,7 @@ fn main() {
         })
         .insert_resource(LevelSelection::Uid(0))
         .add_startup_system(systems::setup)
+        .add_system(systems::spawn_wall_collision)
         .add_system(systems::movement)
         .register_ldtk_int_cell::<components::WallBundle>(1)
         .register_ldtk_int_cell::<components::WallBundle>(3)
