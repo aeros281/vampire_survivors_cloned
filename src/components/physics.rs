@@ -6,6 +6,8 @@ use bevy_rapier2d::prelude::*;
 pub struct ColliderBundle {
     pub velocity: Velocity,
     pub rigid_body: RigidBody,
+    pub gravity_scale: GravityScale,
+    pub density: ColliderMassProperties,
     pub friction: Friction,
     pub collider: Collider,
     pub rotation_constraints: LockedAxes,

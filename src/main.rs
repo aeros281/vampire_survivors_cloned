@@ -11,7 +11,7 @@ fn main() {
         .add_plugin(LdtkPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .insert_resource(RapierConfiguration {
-            gravity: Vec2::new(0.0, 0.0),
+            gravity: Vec2::new(0.0, -2000.0),
             ..default()
         })
         .insert_resource(LevelSelection::Uid(0))

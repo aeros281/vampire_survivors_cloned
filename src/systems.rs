@@ -23,8 +23,8 @@ pub fn movement(input: Res<Input<KeyCode>>, mut query: Query<&mut Velocity, With
         let left = if input.pressed(KeyCode::A) { 1. } else { 0. };
         velocity.linvel.x = (right - left) * 200.;
 
-        let top = if input.pressed(KeyCode::W) { 1. } else { 0. };
-        let down = if input.pressed(KeyCode::S) { 1. } else { 0. };
-        velocity.linvel.y = (top - down) * 200.;
+        if input.just_pressed(KeyCode::W) {
+            velocity.linvel.y = 500.;
+        }
     }
 }
