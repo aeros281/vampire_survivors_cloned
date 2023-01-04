@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::{Player, Wall};
+use crate::components::{AnimationTimer, AnimationType, SpriteAnimation, Player, Wall};
 
 const LEVEL_PATH: &str = "ldtk/main.ldtk";
 
@@ -23,11 +23,65 @@ pub fn movement(input: Res<Input<KeyCode>>, mut query: Query<&mut Velocity, With
     for mut velocity in &mut query {
         let right = if input.pressed(KeyCode::D) { 1. } else { 0. };
         let left = if input.pressed(KeyCode::A) { 1. } else { 0. };
-        velocity.linvel.x = (right - left) * 200.;
+        velocity.linvel.x = (right - left) * 100.;
 
         let top = if input.pressed(KeyCode::W) { 1. } else { 0. };
         let down = if input.pressed(KeyCode::S) { 1. } else { 0. };
-        velocity.linvel.y = (top - down) * 200.;
+        velocity.linvel.y = (top - down) * 100.;
+    }
+}
+
+pub fn update_sprite_facing(
+    mut query: Query<(&mut SpriteAnimation, &Velocity), Changed<Velocity>>,
+) {
+    for (mut sprite_animation, velocity) in &mut query {
+        let new_animation_type;
+        if velocity.linvel.y != 0. {
+            if velocity.linvel.y > 0. {
+                new_animation_type = AnimationType::RunUp;
+            } else {
+                new_animation_type = AnimationType::RunDown;
+            }
+        } else if velocity.linvel.x != 0. {
+            if velocity.linvel.x > 0. {
+                new_animation_type = AnimationType::RunRight;
+            } else {
+                new_animation_type = AnimationType::RunLeft;
+            }
+        } else {
+            new_animation_type = AnimationType::Idle;
+        }
+
+        if sprite_animation.current_animation_type != new_animation_type {
+            sprite_animation.current_animation_type = new_animation_type;
+            sprite_animation.current_frame_index = 0;
+        }
+    }
+}
+
+pub fn sprite_circle(
+    time: Res<Time>,
+    mut query: Query<
+        (
+            &mut AnimationTimer,
+            &mut SpriteAnimation,
+            &mut TextureAtlasSprite,
+        ),
+        With<SpriteAnimation>,
+    >,
+) {
+    for (mut timer, mut sprite_animation, mut sprite) in &mut query {
+        timer.tick(time.delta());
+        if timer.just_finished() {
+            let [frame_offset, frame_count] = sprite_animation
+                .get_current_facing_slice()
+                .expect("Frame animation hash need to contains all available entry for facing");
+
+            let new_frame_index = (sprite_animation.current_frame_index + 1) % frame_count;
+            sprite.index = frame_offset + new_frame_index;
+            sprite_animation.current_frame_index += 1;
+            sprite.flip_x = sprite_animation.is_flipped();
+        }
     }
 }
 
@@ -264,7 +318,7 @@ pub fn camera_fit_inside_current_level(
 
 pub fn scale_player(mut query: Query<&mut Transform, Added<Player>>) {
     for mut transform in &mut query {
-        *transform = transform.with_scale(Vec3::splat(0.75));
+        *transform = transform.with_scale(Vec3::splat(1.));
     }
 }
 

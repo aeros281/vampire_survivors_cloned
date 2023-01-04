@@ -18,6 +18,8 @@ fn main() {
         .add_startup_system(systems::setup)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::movement)
+        .add_system(systems::update_sprite_facing)
+        .add_system(systems::sprite_circle)
         .add_system(systems::camera_fit_inside_current_level)
         .add_system(systems::scale_player)
         .register_ldtk_int_cell::<components::WallBundle>(1)
