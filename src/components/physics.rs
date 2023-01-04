@@ -19,7 +19,7 @@ impl From<EntityInstance> for ColliderBundle {
         match value.identifier.as_ref() {
             "Player" => ColliderBundle {
                 rigid_body: RigidBody::Dynamic,
-                collider: Collider::cuboid(6., 14.),
+                collider: Collider::cuboid(8., 8.),
                 friction: Friction {
                     coefficient: 0.0,
                     combine_rule: CoefficientCombineRule::Min,
@@ -45,3 +45,4 @@ impl From<IntGridCell> for ColliderBundle {
         }
     }
 }
+

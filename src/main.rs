@@ -11,7 +11,7 @@ fn main() {
         .add_plugin(LdtkPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .insert_resource(RapierConfiguration {
-            gravity: Vec2::new(0.0, -2000.0),
+            gravity: Vec2::new(0.0, 0.0),
             ..default()
         })
         .insert_resource(LevelSelection::Uid(0))
@@ -20,7 +20,6 @@ fn main() {
         .add_system(systems::movement)
         .add_system(systems::camera_fit_inside_current_level)
         .register_ldtk_int_cell::<components::WallBundle>(1)
-        .register_ldtk_int_cell::<components::WallBundle>(3)
         .register_ldtk_entity::<components::PlayerBundle>("Player")
         .run();
 }
