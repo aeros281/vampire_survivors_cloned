@@ -21,3 +21,4 @@ pub struct PlayerBundle {
     #[from_entity_instance]
     entity_instance: EntityInstance,
 }
+

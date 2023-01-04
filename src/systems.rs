@@ -262,3 +262,9 @@ pub fn camera_fit_inside_current_level(
     }
 }
 
+pub fn scale_player(mut query: Query<&mut Transform, Added<Player>>) {
+    for mut transform in &mut query {
+        *transform = transform.with_scale(Vec3::splat(0.75));
+    }
+}
+
